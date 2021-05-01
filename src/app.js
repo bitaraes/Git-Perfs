@@ -7,8 +7,7 @@ import Footer from './footer';
 import Icon from './img/github-icon.png';
 
 export default function App(props){
-
-    const [usr, setUsr] = useState()
+    const [usr, setUsr] = useState();
     const [user, setUser] = useState({
         photo: Icon, 
         name: "GitPerfs", 
@@ -18,12 +17,19 @@ export default function App(props){
         de pesquisa e clique em "Buscar" para ver informações sobre ele. Be Happy!`,
         company: "Github"
     });
-
+    const [repos, setRepos] = useState();
+    
     async function onSearch(){
-        const url = await "https://api.github.com/users/";
+        const url = "https://api.github.com/users/";
         const request = await fetch(url+usr);
-        let responseJson = await request.json();
-        console.log(responseJson)
+        const responseJson = await request.json();
+        const reposRequest = await fetch(url+usr+"/repos?per_page=8");
+        const reposJson = await reposRequest.json(); 
+        if (request.status !== 200) {
+            return(
+                alert("Usuário não encontrado")
+            )            
+        }
         setUser({
             photo: responseJson.avatar_url,
             name: responseJson.name,
@@ -32,18 +38,21 @@ export default function App(props){
             bio: responseJson.bio,
             company: responseJson.company
         });
+        setRepos(reposJson);
     }
-
+    
     return(
     <div>
         <Header onClick={onSearch} onChange={(e) => {setUsr(e.target.value)}}/>
         <div className="container">
           <Profile user={user}/>
           <div id="repos-container">
-              <ReposItem />
+            {
+                !repos ? "" : repos.map(atual => <ReposItem key={atual.name} repos={atual}/>) 
+            }
           </div>
         </div>
-        <Footer />
+        <Footer/>
     </div>
     )
 }

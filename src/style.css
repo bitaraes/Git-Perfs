@@ -10,6 +10,11 @@ html, body{
 body{
     margin: 0;
 }
+
+a{
+    text-decoration: none;
+    color: #000;
+}
 /*-----------------Header/Busca-----------------*/
 header{
     display: flex;
@@ -144,6 +149,7 @@ p#profile-bio{
     border-radius: 5px;
     width: 47%;
     min-width: 250px;
+    text-transform: capitalize;
 }
 
 #repos-item:hover{
